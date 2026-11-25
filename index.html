@@ -199,6 +199,33 @@
 
                 micBtn.textContent = 'Mic Connected! 😃';
                 console.log('Microphone stream active', stream);
+                // 1. Set up the audio workspace and analyser
+const audioCtx = new AudioContext();
+const source = audioCtx.createMediaStreamSource(stream);
+const analyser = audioCtx.createAnalyser();
+analyser.fftSize = 256;
+source.connect(analyser);
+
+// 2. Create an array to store frequency volume numbers (0 to 255)
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+// 3. Continuously read the volume
+function checkVolume() {
+    analyser.getByteFrequencyData(dataArray);
+
+    // Average the first 24 low-frequency bins (where wind/breath sits)
+    let sum = 0;
+    for (let i = 0; i < 24; i++) {
+        sum += dataArray[i];
+    }
+    const volume = sum / 24;
+
+    console.log('Blow volume:', Math.round(volume));
+    requestAnimationFrame(checkVolume);
+}
+
+checkVolume();
+
             } catch (error) {
                 micBtn.textContent = 'Mic Blocked 😞';
                 console.error('Error accessing mic:', error);
