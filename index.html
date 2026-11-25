@@ -3,126 +3,122 @@
 <head>
     <title>Candle</title>
     <style>
-        body{
+        body {
             background: black;
             display: grid;
             place-items: center;
             height: 95vh;
+            margin: 0;
         }
-        .candle-wrapper{
+        .candle-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .container{
+        .container {
+            position: relative;
             width: 60px;
             height: 60px;
             transform-origin: center bottom;
             animation: flicker 500ms 200ms ease-in infinite alternate;
+            z-index: 2;
         }
-        .flame{
+        .flame {
             bottom: 0;
             position: absolute;
             border-bottom-right-radius: 50%;
             border-top-left-radius: 50%;
-            transform: rotate(-45deg) scale(1.5,1.5);
+            transform: rotate(-45deg) scale(1.5, 1.5);
         }
-        .yellow{
-            Left: 15px;
+        .yellow {
+            left: 15px;
             width: 30px;
             height: 30px;
             background: gold;
             box-shadow: 0px 0px 9px 4px gold;
         }
-        .orange{
-            Left: 10px;
+        .orange {
+            left: 10px;
             width: 40px;
             height: 40px;
             background: orange;
             box-shadow: 0px 0px 9px 4px orange;
         }
-        .red{
-            Left: 5px;
+        .red {
+            left: 5px;
             width: 50px;
             height: 50px;
             background: OrangeRed;
             box-shadow: 0px 0px 5px 4px OrangeRed;
         }
-        .white{
-            Left: 15px;
+        .white {
+            left: 15px;
             bottom: -4px;
             width: 30px;
             height: 30px;
             background: white;
             box-shadow: 0px 0px 9px 4px white;
         }
-        .circle{
+        .circle {
             border-radius: 50%;
             position: absolute;
         }
-        .blue{
+        .blue {
             width: 10px;
             height: 10px;
-            Left: 25px;
-            bottom: -25px;
+            left: 25px;
+            bottom: -12px;
             background: SlateBlue;
-            box-shadow: 0px 0px 15px 10px SlateBlue;
+            box-shadow: 0px 0px 15px 8px SlateBlue;
         }
-        .black{
-            width: 40px;
-            height: 40px;
-            left: 10px;
-            bottom: -60px;
-            background: black;
-            box-shadow: 0px 0px 15px 10px black;
-        }
-        .wick{
+        .wick {
             width: 6px;
             height: 22px;
-            background: linear-gradient(to-bottom, #ff7b00; #332211 45%, #1a110a);
-            border-radius: 3px 3px  0 0;
-            margin-top: 12px;
+            background: linear-gradient(to bottom, #ff7b00, #332211 45%, #1a110a);
+            border-radius: 3px 3px 0 0;
+            margin-top: 8px;
             z-index: 1;
         }
-        .candle{
-            postion: relative;
+        .candle {
+            position: relative;
             width: 90px;
             height: 180px;
-            background: linear-gradient(to right, #e8dcc8, #fff88eb 30%, #e6d5b8 85%, #cbb593);
+            background: linear-gradient(to right, #e8dcc8, #fff8eb 30%, #e6d5b8 85%, #cbb593);
             border-radius: 10px 10px 6px 6px;
             box-shadow: 0 -10px 25px rgba(255, 165, 0, 0.25);
         }
-        .candle: :before{
+        .candle::before {
             content: "";
             position: absolute;
             top: -6px;
             left: 0;
             width: 100%;
-            background :radial-gradient(ellipse at center, #ffdfa8 0%, #e8dcc8 70%, #d4c2a3 100%);
+            height: 12px;
+            background: radial-gradient(ellipse at center, #ffdfa8 0%, #e8dcc8 70%, #d4c2a3 100%);
             border-radius: 50%;
         }
-        @keyframes flicker{
-            0% {transform: rotate(-1deg);}
-            20%{transform: rotate(1deg);}
-            40%{transform: rotate(-1deg);}
-            60%{transform: rotate(1deg) scaleY(1.04);}
-            80%{transform: rotate(-2deg) scaleY(0.92);}
-            100%{transform: rotate(1deg);}
+        @keyframes flicker {
+            0%   { transform: rotate(-1deg); }
+            20%  { transform: rotate(1deg); }
+            40%  { transform: rotate(-1deg); }
+            60%  { transform: rotate(1deg) scaleY(1.04); }
+            80%  { transform: rotate(-2deg) scaleY(0.92); }
+            100% { transform: rotate(1deg); }
         }
-
     </style>
 </head>
-</html>
 <body>
-    <div class="container">
-        <div class="red flame"></div>
-        <div class="orange flame"></div>
-        <div class="yellow flame"></div>
-        <div class="white flame"></div>
-        <div class="blue circle"></div>
-        <div class="black circle"></div>
+    <div class="candle-wrapper">
+        <div class="container">
+            <div class="red flame"></div>
+            <div class="orange flame"></div>
+            <div class="yellow flame"></div>
+            <div class="white flame"></div>
+            <div class="blue circle"></div>
+        </div>
+        <div class="wick"></div>
+        <div class="candle"></div>
     </div>
-    <div class="wick"></div>
-    <div class="candle"></div>
-    </body>
-    </html>
+</body>
+</html>
+
