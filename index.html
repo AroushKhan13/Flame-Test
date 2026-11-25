@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Candle</title>
+    <style>
+        body {
+            background: #0a0a0c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 95vh;
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #d4c2a3;
+        }
+        .wind-layer {
+    transform-origin: center bottom;
+    transition: transform 0.08s ease-out;
+    z-index: 2;
+}
+        .candle-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            transform-origin: center bottom;
+            animation: flicker 500ms 200ms ease-in infinite alternate;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 2;
+        }
+        /* Extinguished state */
+        .candle-wrapper.out .container {
+            opacity: 0;
+            transform: scale(0.2) translateY(15px);
+            pointer-events: none;
+        }
+        .flame {
+            bottom: 0;
+            position: absolute;
+            border-bottom-right-radius: 50%;
+            border-top-left-radius: 50%;
+            transform: rotate(-45deg) scale(1.5, 1.5);
+        }
+        .yellow {
+            left: 15px;
+            width: 30px;
+            height: 30px;
+            background: gold;
+            box-shadow: 0px 0px 9px 4px gold;
+        }
+        .orange {
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            background: orange;
+            box-shadow: 0px 0px 9px 4px orange;
+        }
+        .red {
+            left: 5px;
+            width: 50px;
+            height: 50px;
+            background: OrangeRed;
+            box-shadow: 0px 0px 5px 4px OrangeRed;
+        }
+        .white {
+            left: 15px;
+            bottom: -4px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            box-shadow: 0px 0px 9px 4px white;
+        }
+        .circle {
+            border-radius: 50%;
+            position: absolute;
+        }
+        .blue {
+            width: 10px;
+            height: 10px;
+            left: 25px;
+            bottom: -12px;
+            background: SlateBlue;
+            box-shadow: 0px 0px 15px 8px SlateBlue;
+        }
+        /* Smoke wisp */
+        .smoke {
+            position: absolute;
+            top: 38px;
+            width: 8px;
+            height: 35px;
+            background: rgba(200, 200, 210, 0.45);
+            border-radius: 50%;
+            filter: blur(5px);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .candle-wrapper.out .smoke {
+            animation: rise 2.4s ease-out forwards;
+        }
+        .wick {
+            width: 6px;
+            height: 22px;
+            background: linear-gradient(to bottom, #ff7b00, #332211 45%, #1a110a);
+            border-radius: 3px 3px 0 0;
+            margin-top: 8px;
+            z-index: 1;
+            transition: background 0.6s ease;
+        }
+        .candle-wrapper.out .wick {
+            background: linear-gradient(to bottom, #4a4a4a, #22160c 45%, #1a110a);
+        }
+        .candle {
+            position: relative;
+            width: 90px;
+            height: 180px;
+            background: linear-gradient(to right, #e8dcc8, #fff8eb 30%, #e6d5b8 85%, #cbb593);
+            border-radius: 10px 10px 6px 6px;
+            box-shadow: 0 -10px 25px rgba(255, 165, 0, 0.25);
+            transition: box-shadow 0.4s ease;
+        }
+        .candle-wrapper.out .candle {
+            box-shadow: none;
+        }
+        .candle::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: radial-gradient(ellipse at center, #ffdfa8 0%, #e8dcc8 70%, #d4c2a3 100%);
+            border-radius: 50%;
+        }
+        .hint {
+            margin-top: 28px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            opacity: 0.75;
+        }
+        @keyframes flicker {
+            0%   { transform: rotate(-1deg); }
+            20%  { transform: rotate(1deg); }
+            40%  { transform: rotate(-1deg); }
+            60%  { transform: rotate(1deg) scaleY(1.04); }
+            80%  { transform: rotate(-2deg) scaleY(0.92); }
+            100% { transform: rotate(1deg); }
+        }
+        @keyframes rise {
+            0%   { opacity: 0; transform: translateY(0) scale(0.8); }
+            20%  { opacity: 0.7; }
+            100% { opacity: 0; transform: translateY(-75px) translateX(14px) scale(2.4); }
+        }
+    </style>
+</head>
+<body>
+    <div class="candle-wrapper" id="candle" role="button" tabindex="0" aria-label="Toggle candle flame">
+    <div class="smoke"></div>
+    <div class="wind-layer" id="windLayer">
+        <div class="container">
+            <div class="red flame"></div>
+            <div class="orange flame"></div>
+            <div class="yellow flame"></div>
+            <div class="white flame"></div>
+            <div class="blue circle"></div>
+        </div>
+    </div>
+    <div class="wick"></div>
+    <div class="candle"></div>
+</div>
+    <div class="hint" id="hint">Blow on the candle</div>
+    <button id="micBtn">Enable Mic</button>
+    <!--Ew javascript-->
+    <script>
+        const candle = document.getElementById('candle');
+        const hint = document.getElementById('hint');
+        const windLayer = document.getElementById('windLayer');
+
+        function toggleCandle() {
+            const isOut = candle.classList.toggle('out');
+            hint.textContent = isOut
+                ? 'Look what you did. There is no fixing this now.'
+                : 'Blow the candle for something shocking';
+        }
+        function blowOutCandle() {
+            //Only run if candle is NOT already blown out//
+            if (!candle.classList.contains('out')) {
+                candle.classList.add('out');
+                hint.textContent = 'Look what you did. There is no fixing this now.';
+            }
+        }
+
+        candle.addEventListener('click', toggleCandle);
+        candle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleCandle();
+            }
+        });
+            const micBtn = document.getElementById('micBtn');
+        micBtn.addEventListener('click', async () => { 
+            try {
+                //Ask for access//
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                micBtn.textContent = 'Mic Connected! 😃';
+                console.log('Microphone stream active', stream);
+                // 1. Set up the audio workspace and analyser
+const audioCtx = new AudioContext();
+const source = audioCtx.createMediaStreamSource(stream);
+const analyser = audioCtx.createAnalyser();
+analyser.fftSize = 256;
+source.connect(analyser);
+
+// 2. Create an array to store frequency volume numbers (0 to 255)
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+// 3. Continuously read the volume
+function checkVolume() {
+    analyser.getByteFrequencyData(dataArray);
+
+    // Average the first 24 low-frequency bins (where wind/breath sits)
+    let sum = 0;
+    for (let i = 0; i < 24; i++) {
+        sum += dataArray[i];
+    }
+    const volume = sum / 24;
+    if (volume > 30 && !candle.classList.contains('out')) {
+    // Calculate a tilt angle based on how hard you're blowing (capped at 35 degrees)
+    const tilt = Math.min((volume - 30) * 0.4, 35);
+    windLayer.style.transform = `skewX(${tilt}deg)`;
+} else {
+    windLayer.style.transform = 'none';
+}
+
+    if (volume > 140) {
+        blowOutCandle();
+    }
+    requestAnimationFrame(checkVolume);
+}
+
+checkVolume();
+
+            } catch (error) {
+                micBtn.textContent = 'Mic Blocked 😞';
+                console.error('Error accessing mic:', error);
+            }
+        });
+    </script>
+</body>
+</html>
