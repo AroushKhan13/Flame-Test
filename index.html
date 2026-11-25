@@ -22,6 +22,7 @@
             cursor: pointer;
             user-select: none;
         }
+        
         .container {
             position: relative;
             width: 60px;
@@ -170,7 +171,8 @@
         <div class="candle"></div>
     </div>
     <div class="hint" id="hint">Click the candle to blow it out</div>
-
+    <button id="micBtn">Enable Mic</button>
+    <!--Ew javascript-->
     <script>
         const candle = document.getElementById('candle');
         const hint = document.getElementById('hint');
@@ -187,6 +189,19 @@
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 toggleCandle();
+            }
+        });
+            const micBtn = document.getElementById('micBtn');
+        micBtn.addEventListener('click', async () => { 
+            try {
+                //Ask for access//
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                micBtn.textContent = 'Mic Blocked';
+                console.log('Microphone stream active', stream);
+            } catch (error) {
+                micBtn.textContent = 'Mic Connected!';
+                console.error('Error accessing mic:', error);
             }
         });
     </script>
