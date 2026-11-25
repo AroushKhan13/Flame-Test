@@ -170,7 +170,7 @@
         <div class="wick"></div>
         <div class="candle"></div>
     </div>
-    <div class="hint" id="hint">Click the candle to blow it out</div>
+    <div class="hint" id="hint">Blow the candle to blow it out</div>
     <button id="micBtn">Enable Mic</button>
     <!--Ew javascript-->
     <script>
@@ -181,7 +181,7 @@
             const isOut = candle.classList.toggle('out');
             hint.textContent = isOut
                 ? 'Look what you did. There is no fixing this now.'
-                : 'Click the candle for something shocking';
+                : 'Blow the candle for something shocking';
         }
         function blowOutCandle() {
             //Only run if candle is NOT already blown out//
@@ -227,7 +227,7 @@ function checkVolume() {
     }
     const volume = sum / 24;
 
-    if (volume > 95) {
+    if (volume > 140) {
         blowOutCandle();
     }
     requestAnimationFrame(checkVolume);
