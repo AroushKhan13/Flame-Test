@@ -183,6 +183,12 @@
                 ? 'Look what you did. There is no fixing this now.'
                 : 'Click the candle for something shocking';
         }
+        function blowOutCandle() {
+            //Only run if candle is NOT already blown out//
+            if (!candle.classList.contains('out')) {
+                candle.classList.add('out');
+                hint.textContent = 'Look what you did. There is no fixing this now.':
+            }
 
         candle.addEventListener('click', toggleCandle);
         candle.addEventListener('keydown', (e) => {
@@ -220,7 +226,9 @@ function checkVolume() {
     }
     const volume = sum / 24;
 
-    console.log('Blow volume:', Math.round(volume));
+    if (volume > 95) {
+        blowOutCandle();
+    }
     requestAnimationFrame(checkVolume);
 }
 
