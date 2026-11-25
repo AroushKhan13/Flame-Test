@@ -197,10 +197,10 @@
                 //Ask for access//
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-                micBtn.textContent = 'Mic Blocked';
+                micBtn.textContent = 'Mic Connected! 😃';
                 console.log('Microphone stream active', stream);
             } catch (error) {
-                micBtn.textContent = 'Mic Connected!';
+                micBtn.textContent = 'Mic Blocked 😞';
                 console.error('Error accessing mic:', error);
             }
         });
