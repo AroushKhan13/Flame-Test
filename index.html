@@ -14,6 +14,11 @@
             font-family: system-ui, -apple-system, sans-serif;
             color: #d4c2a3;
         }
+        .wind-layer {
+    transform-origin: center bottom;
+    transition: transform 0.08s ease-out;
+    z-index: 2;
+}
         .candle-wrapper {
             position: relative;
             display: flex;
@@ -159,7 +164,8 @@
 </head>
 <body>
     <div class="candle-wrapper" id="candle" role="button" tabindex="0" aria-label="Toggle candle flame">
-        <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="wind-layer" id="windLayer">
         <div class="container">
             <div class="red flame"></div>
             <div class="orange flame"></div>
@@ -167,15 +173,17 @@
             <div class="white flame"></div>
             <div class="blue circle"></div>
         </div>
-        <div class="wick"></div>
-        <div class="candle"></div>
     </div>
-    <div class="hint" id="hint">Blow the candle to blow it out</div>
+    <div class="wick"></div>
+    <div class="candle"></div>
+</div>
+    <div class="hint" id="hint">Blow on the candle</div>
     <button id="micBtn">Enable Mic</button>
     <!--Ew javascript-->
     <script>
         const candle = document.getElementById('candle');
         const hint = document.getElementById('hint');
+        const windLayer = document.getElementById('windLayer');
 
         function toggleCandle() {
             const isOut = candle.classList.toggle('out');
@@ -226,6 +234,13 @@ function checkVolume() {
         sum += dataArray[i];
     }
     const volume = sum / 24;
+    if (volume > 30 && !candle.classList.contains('out')) {
+    // Calculate a tilt angle based on how hard you're blowing (capped at 35 degrees)
+    const tilt = Math.min((volume - 30) * 0.4, 35);
+    windLayer.style.transform = `skewX(${tilt}deg)`;
+} else {
+    windLayer.style.transform = 'none';
+}
 
     if (volume > 140) {
         blowOutCandle();
